@@ -75,12 +75,14 @@ pub fn ask_send(app: AppHandle) {
 
     win.get_webview("main")
         .unwrap()
-        .eval(r#"
+        .eval(
+            r#"
         ChatAsk.submit();
         setTimeout(() => {
             __TAURI__.webview.Webview.getByLabel('ask')?.setFocus();
         }, 500);
-        "#)
+        "#,
+        )
         .unwrap();
 }
 
@@ -112,20 +114,12 @@ pub fn set_view_ask(app: AppHandle, enabled: bool) {
     let ask_mode_height = if enabled { ASK_HEIGHT } else { 0.0 };
     let scale_factor = core_window.scale_factor().unwrap();
     let titlebar_height = (scale_factor * TITLEBAR_HEIGHT).round() as u32;
-    let win_size = core_window
-        .inner_size()
-        .unwrap();
+    let win_size = core_window.inner_size().unwrap();
     let ask_height = (scale_factor * ask_mode_height).round() as u32;
 
-    let main_view = core_window
-        .get_webview("main")
-        .unwrap();
-    let titlebar_view = core_window
-        .get_webview("titlebar")
-        .unwrap();
-    let ask_view = core_window
-        .get_webview("ask")
-        .unwrap();
+    let main_view = core_window.get_webview("main").unwrap();
+    let titlebar_view = core_window.get_webview("titlebar").unwrap();
+    let ask_view = core_window.get_webview("ask").unwrap();
 
     if enabled {
         ask_view.set_focus().unwrap();

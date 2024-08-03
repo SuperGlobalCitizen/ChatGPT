@@ -95,12 +95,12 @@ pub fn init(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
 
             let titlebar_view = WebviewBuilder::new(
                 "titlebar",
-                WebviewUrl::App("index.html?type=titlebar".into()),
+                WebviewUrl::App("index.html".into()),
             )
             .auto_resize();
 
             let ask_view =
-                WebviewBuilder::new("ask", WebviewUrl::App("index.html?type=ask".into()))
+                WebviewBuilder::new("ask", WebviewUrl::App("index.html".into()))
                     .auto_resize();
 
             let win = window.lock().unwrap();
@@ -111,6 +111,7 @@ pub fn init(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
             #[cfg(target_os = "macos")]
             {
                 let main_area_height = win_size.height - titlebar_height;
+
                 win.add_child(
                     titlebar_view,
                     LogicalPosition::new(0, 0),

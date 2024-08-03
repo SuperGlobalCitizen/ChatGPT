@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { getCurrent } from '@tauri-apps/api/window';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open } from '@tauri-apps/plugin-shell';
 import { debounce } from 'lodash';
 import clsx from 'clsx';
@@ -11,6 +11,7 @@ import PinIcon from '~icons/Pin';
 import UnPinIcon from '~icons/UnPin';
 import LinkIcon from '~icons/Link';
 import AskIcon from '~icons/Ask';
+import SettingIcon from '~icons/Setting';
 import ThemeSystem from '~icons/ThemeSystem';
 import ThemeLight from '~icons/ThemeLight';
 import ThemeDark from '~icons/ThemeDark';
@@ -29,7 +30,7 @@ export default function Titlebar() {
   const titlebarHidden = info.isMac && isTitlebarHidden;
 
   useEffect(() => {
-    const win = getCurrent();
+    const win = getCurrentWindow();
     let winResize: Function;
     let changeUrl: Function;
 
@@ -49,7 +50,7 @@ export default function Titlebar() {
         setFullScreen(full);
       }, 50))
 
-      changeUrl = await getCurrent().listen('navigation:change', (event: any) => {
+      changeUrl = await getCurrentWindow().listen('navigation:change', (event: any) => {
         const { url } = event.payload;
         setUrl(url);
 
@@ -111,6 +112,10 @@ export default function Titlebar() {
     open(url);
   };
 
+  const handleSetting = () => {
+    invoke('open_settings');
+  };
+
   const renderSettings = useMemo(() => {
     return (
       <div className={clsx('items-center gap-1', {
@@ -121,6 +126,7 @@ export default function Titlebar() {
         {isPin
           ? <PinIcon action onClick={() => handlePin(false)} />
           : <UnPinIcon action onClick={() => handlePin(true)} />}
+        <SettingIcon action onClick={handleSetting} />
       </div>
     )
   }, [titlebarHidden, themeIcon, isPin])
